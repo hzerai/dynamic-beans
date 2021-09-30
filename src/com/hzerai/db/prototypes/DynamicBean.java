@@ -25,6 +25,18 @@ public class DynamicBean extends Daughter {
 		return Utility.getBean(beanName, fields, packageName);
 	}
 
+	public static void register(String beanName, Map<String, String> fields, String packageName) {
+		Utility.getBean(beanName, fields, packageName);
+	}
+
+	public static void register(String beanName) {
+		Utility.getBean(beanName);
+	}
+
+	public static void register(String beanName, Map<String, String> fields) {
+		Utility.getBean(beanName, fields);
+	}
+
 	public Class<?> getDynamicClass() {
 		return super.getClass();
 	}

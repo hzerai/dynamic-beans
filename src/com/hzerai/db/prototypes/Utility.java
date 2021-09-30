@@ -28,11 +28,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.lang3.text.WordUtils;
+
+import com.hzerai.db.metadata.Database;
+import com.hzerai.db.metadata.Table;
 
 import javassist.CannotCompileException;
 import javassist.ClassClassPath;
@@ -333,5 +337,25 @@ public abstract class Utility {
 
 	static boolean isRegistredBean(String beanName) {
 		return BEANREGISTER.containsKey(beanName);
+	}
+
+	public static void load(String packageName) {
+		List<Table> tables;
+		try {
+			tables = Database.getTables();
+		} catch (Exception e) {
+			return;
+		}
+		for (Table table : tables) {
+			Map<String, String> fields = new HashMap<String, String>();
+			table.getColumns().forEach(c -> {
+				fields.put(c.getName(), c.getClassName());
+			});
+			if (packageName != null) {
+				getBean(table.getName(), fields, packageName);
+			} else {
+				getBean(table.getName(), fields);
+			}
+		}
 	}
 }
